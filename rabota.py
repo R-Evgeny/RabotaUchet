@@ -23,7 +23,7 @@ def next():
     Prod = Product.get()
     Prod = Prod[1:-1]
     global Tipe_of_work
-    with sq.connect('work_db.db') as con:
+    with sq.connect('uchet_rabot.db') as con:
         cur = con.cursor()
         cur.execute(f"SELECT type_of_work FROM product WHERE product = '{Prod}'")
         tipe_of_work = cur.fetchall()
@@ -48,7 +48,7 @@ def save():
     if DC=='' or DT=='' or N=='Имя' or P=='Название изделия' or T=='' or Q=='':
         messagebox.showerror('Ошибка', "Не все данные внесены")
     else:
-        with sq.connect('work_db.db') as con:
+        with sq.connect('uchet_rabot.db') as con:
             cur = con.cursor()
             cur.execute(f"INSERT INTO rabota (date_create, date_todo, name, product, type_of_work, quantity) VALUES ('{DC}','{DT}','{N}','{P}','{T}','{Q}')")
             cur.execute(f"UPDATE product SET quantity = quantity - {Q} WHERE product = '{P}' AND type_of_work = '{T}'")
@@ -67,7 +67,7 @@ def incoming():
     if DC=='' or DT=='' or P=='Название изделия' or Q=='':
         messagebox.showerror('Ошибка', "Не все данные внесены")
     else:
-        with sq.connect('work_db.db') as con:
+        with sq.connect('uchet_rabot.db') as con:
             cur = con.cursor()
             cur.execute(f"INSERT INTO rabota (date_create, date_todo, product, incoming) VALUES ('{DC}','{DT}','{P}','{Q}')")
             cur.execute(f"UPDATE product SET quantity = quantity + {Q} WHERE product = '{P}'")
@@ -82,6 +82,12 @@ def root1():
 def root2():
     subprocess.call(['py', 'C:\Python\RabotaUchet\otchet1.py'])
 
+def root3():
+    subprocess.call(['py', 'C:\Python\RabotaUchet\otchet2.py'])
+
+def root4():
+    subprocess.call(['py', 'C:\Python\RabotaUchet\otchet3.py'])
+
 root = Tk()
 root.title("Учет работы")
 root.geometry('1250x700+2+2')
@@ -94,7 +100,7 @@ Label(root, text='EMail: rudevgeny@gmail.com', width=5, height=1, bg=framebg, an
 Label(root, text='Дата записи', font='arial 10').place(x=13, y=25)
 Date = StringVar()
 today = date.today()
-d1 = today.strftime("%d/%m/%Y")
+d1 = today.strftime("%Y/%m/%d")
 date_entry = Entry(root, textvariable=Date, width=9, font="arial 12")
 date_entry.place(x=10, y=50)
 Date.set(d1)
@@ -104,10 +110,10 @@ Label(root, text="Дата выполнения", font='arial 10').place(x=118, 
 # dow_entry = Entry(root, textvariable=DOW, width=9, font="arial 12")
 # dow_entry.place(x=130, y=50)
 DOW = StringVar()
-DE = DateEntry(root,textvariable=DOW, font='arial 10', date_pattern='YYYY/mm/dd').place(x=120,y=50)
+DE = DateEntry(root, textvariable=DOW, font='arial 10', date_pattern='YYYY/mm/dd').place(x=120,y=50)
 
 Label(root, text="Имя работника", font='arial 10').place(x=256, y=25)
-with sq.connect('work_db.db') as con:
+with sq.connect('uchet_rabot.db') as con:
     cur = con.cursor()
     cur.execute(f"SELECT name FROM workers")
     name = cur.fetchall()
@@ -116,7 +122,7 @@ Name.place(x=250, y=50)
 Name.set('Имя')
 
 Label(root, text="Название изделия", font='arial 10').place(x=460, y=25)
-with sq.connect('work_db.db') as con:
+with sq.connect('uchet_rabot.db') as con:
     cur = con.cursor()
     cur.execute(f"SELECT product FROM product")
     product = cur.fetchall()
@@ -139,12 +145,10 @@ Button(root,text='Сохранить',width=9,height=2,font='arial 10 bold',bg='
 
 Button(root,text='Приход',width=9,height=2,font='arial 10 bold',bg='lightblue',command=incoming).place(x=1161,y=85)
 
+
 Button(root,text='З/П',width=9,height=2,font='arial 10 bold',bg='lightblue',command=root1).place(x=1161,y=180)
-
 Button(root,text='Приходы',width=9,height=2,font='arial 10 bold',bg='lightblue',command=root2).place(x=900,y=180)
-
-
-
-
+Button(root,text='Отчет',width=9,height=2,font='arial 10 bold',bg='lightblue',command=root3).place(x=700,y=180)
+Button(root,text='Изменение названий и цен',width=25,height=2,font='arial 10 bold',bg='lightblue',command=root4).place(x=100,y=180)
 
 root.mainloop()

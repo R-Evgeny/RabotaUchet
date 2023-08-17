@@ -6,7 +6,7 @@ import sqlite3 as sq
 
 
 table2 = tkinter.Tk()
-table2.title("Учет работы2")
+table2.title("Приходы")
 table2.geometry('1250x700+50+50')
 table2.config(bg="#06283D")
 
@@ -18,7 +18,7 @@ def next2():
     SD = start_date.get()
     ED = end_date.get()
 
-    with sq.connect('work_db.db') as con:
+    with sq.connect('uchet_rabot.db') as con:
         cur = con.cursor()
         cur.execute(
             f'SELECT date_todo, product, incoming FROM rabota WHERE incoming BETWEEN "1" AND "100000" AND date_todo BETWEEN "{SD}" AND "{ED}"')

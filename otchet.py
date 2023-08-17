@@ -6,7 +6,7 @@ import sqlite3 as sq
 
 
 table1 = tkinter.Tk()
-table1.title("Учет работы1")
+table1.title("Расчет ЗП")
 table1.geometry('1250x700+30+30')
 table1.config(bg="#06283D")
 
@@ -19,7 +19,7 @@ def next1():
     ED = end_date.get()
     N = Name.get()
 
-    with sq.connect('work_db.db') as con:
+    with sq.connect('uchet_rabot.db') as con:
         global zp
         cur = con.cursor()
         cur.execute(
@@ -62,7 +62,7 @@ end_date = StringVar()
 DE2 = DateEntry(table1, textvariable=end_date, font='arial 10', date_pattern='YYYY/mm/dd').place(x=600, y=50)
 
 Label(table1, text="Имя работника", font='arial 10').place(x=800, y=25)
-with sq.connect('work_db.db') as con:
+with sq.connect('uchet_rabot.db') as con:
     cur = con.cursor()
     cur.execute(f"SELECT name FROM workers")
     name = cur.fetchall()
